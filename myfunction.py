@@ -218,17 +218,13 @@ def least_common_multiple_infinite(array_of_numbers):
 	array_of_prime_factors = []
 	for i in array_of_numbers:
 		array_of_prime_factors.append(prime_factors(i))
-	prime_factors_lcm = []
+	lcm = 1
 	for i in range(0, max(array_of_numbers)):
 		how_many_i_in_prime_factors = []
-		for j in range(0, len(array_of_numbers)):
+		for j in range(0, len(array_of_numbers)): # puede ser len de array_of_numbers o array_of_prime_factos... son de la misma longitud
 			how_many_i_in_prime_factors.append( how_many_times_element_in_array(i, array_of_prime_factors[j]) )
-		max_amount = max(how_many_i_in_prime_factors)
-		for j in range(0, max_amount): prime_factors_lcm.append(i)
+		for j in range(0, max(how_many_i_in_prime_factors)): lcm *= i
 	
-	lcm = 1
-	for i in prime_factors_lcm:
-		lcm *= i
 	return lcm
 
 #///_._6_._///________________________________________________________________________________________________________
