@@ -1,13 +1,12 @@
 import math
+import timeit
+import time
 
 
-
-#///_._1_._///________________________________________________________________________________________________________
 # es a multiplo de b?
 def multiple(a, b):
 	if(a % b == 0): return True
 	return False
-#///_._2_._///________________________________________________________________________________________________________
 
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # devuelve el iésimo (por eso no pongo num de argumento) número de fibonacci
@@ -32,7 +31,7 @@ def even_valued_term(num):
 	if(num % 2 == 0): return True
 	return False
 
-#///_._3_._///________________________________________________________________________________________________________
+
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #yo me acuerdo en 42 madrid cuando calculábamos números primos, que ponía range(2, num/2), hasta la mitad porque
 #no sabía muy bien donde estaba el límite hasta donde podías bajar, pero ahora si lo sé,
@@ -143,8 +142,6 @@ def prime_factors(num): #factorizacion de num
 		if(final): break
 	return prime_factors
 
-#///_._4_._///________________________________________________________________________________________________________
-
 
 def palindromic(string):
 	for i in range(0, math.floor(len(string) / 2)):
@@ -161,8 +158,6 @@ def max_of_array(array): #existe max() + + + + + + + + + +
 		if(i > max): max = i
 	return max
 """
-///_._5_._///________________________________________________________________________________________________________
-
 mcm de 5 y 7, como los dos son primos es su multiplicación: 35
 mcm de 10 y 14, es como el mcm de 5 y 7 pero por 2, el número necesario para reducirlos a primos, 2*(5*7) = 70
 mcm de 7 y 5*(2*3)? En este caso no podrías reducir los dos números (7 y 5 por dos) ahora sólo puedes reducir el 30 por 2 y 3
@@ -175,12 +170,13 @@ pero 2 y 3*2 es también 6 (LOS PRIMOS REPETIDOS NO SE CUENTAN), sólo sería 2*
 y 2 y 3*4=3*2*2 es mcm 2*2*3
 4 y 10 es 2*2 y 2*5 y el mcm es 2*2*5 = 20
 
-se cogen los números primos de los números y se cogen los sueltos y una vez los repetidos en los dos números
+de los factores de los dos numeros
+se hace una lista con los factores de uno y a esa lista se anyaden los factores no repetidos del otro
 
-3, 8 -> 24
-3*2 , 2*2 -> 12
-3*2*2 , 2 -> 12
-3*2*2*2 , 1 -> 24
+3, 2 2 2 -> 3 2 2 2
+3*2 , 2*2 -> 3 2 2
+3*2*2 , 2 -> 3 2 2
+3*2*2*2 , 1 -> 3 2 2 2
 tienes la lista de numeros del numero A y la lista de numeros del B
 cuando coges un numero lo quitas de la lista
 coges los numeros que solo estan en una lista y te los llevas a la final
@@ -206,9 +202,6 @@ def least_common_multiple(a, b): #ESTOY HACIENDO MINIMO COMUN MULTIPLO DE DOS N�
 		#if difference <= 1: i += 1 con estas dos lineas tambien funciona pero la de abajo es mejor
 		#else: i += difference pero si del numero i tienes 10 en b y 5 en a, la diferencia es 5, y cuando haces i+5, sigues estando en el numero i, NO FUNCIONA + + + + + + + + + +
 		i += how_many_times_element_in_array(prime_factors_b[i], prime_factors_b)
-	print(prime_factors_a)
-	print(prime_factors_b)
-	print(prime_factors_lcm)
 	lcm = 1
 	for i in prime_factors_lcm:
 		lcm *= i
@@ -227,34 +220,60 @@ def least_common_multiple_infinite(array_of_numbers):
 	
 	return lcm
 
-#///_._6_._///________________________________________________________________________________________________________
-#///_._7_._///________________________________________________________________________________________________________
-#///_._8_._///________________________________________________________________________________________________________
+"""
+el mínimo común divisor consiste en coger los factores de los números y coger los que coincidan.
++ + + + + tiene sentido: el producto de los que cojas será el mayor número por el que puedes dividir ambos números y que quede entero
 
-"""NO ME HA HECHO FALTA USAR ESTO, PERO LO INTENTÉ PORQUE TENÍA CURIOSIDAD"""
-#el mínimo común divisor consiste en coger los factores primos de los dos números y coger los que coincidan.
-# tiene sentido: el producto de los que cojas será el mayor número por el que puedes dividir ambos números y que quede entero
-#PODRÍA HACER FUNCIÓN QUE DIJERA QUE ELEMENTOS ESTÁN EN TODAS LAS LISTAS
-def greatest_common_divisor(array_of_numbers):
+voy a hacer el pensamiento con dos numeros pero se puede hacer con infinitos
+teniendo dos listas de numeros que son factores de los numeros que vas a hacer el maximo comun divisor
+	tienes dos tipos de numeros en esas listas.
+	A: los numeros que solo aparecen en la lista A ya sean las veces que sean
+	B: los numeros que solo aparecen en la lista B ya sean las veces que sean
+	C: los numeros que aparecen en las dos listas ya sean las veces que sean
+
+si en minimo comun multiplo cogiamos todos los A y todos los B y todos los C (contados una vez, claro, no dos veces, uno por lista)
+pues en el maximo comun divisor cogemos solo los C (contados una vez, claro, no dos veces, uno por lista)
+"""
+
+def greatest_common_divisor_FALLIDO(array_of_numbers):
+	# + + + + +no es una buena estructura por que en la primera de array_of_prime_facotors puedes tener 7 veces el numero 5 y si en el resto de array_of_priem_factors tiene al menos un 5, esos 7 cincos los mantienes, y no tiene sentido, solo debes mantener 1
 	array_of_prime_factors = []
 	for i in array_of_numbers:
 		array_of_prime_factors.append(prime_factors(i))
 	#voy a coger los primos del primer número, y si no me los encuentro en el resto de números, los voy tachando
-	prime_factors_mcd = array_of_prime_factors[0]
-
-	#FUNCIONA MAL, TENGO QUE HACER LO DE DIFFERENCE (PROBAR CON EL 12 Y 18 Y SE VE QUE SALE MCD = 12)
+	prime_factors_gcd = array_of_prime_factors[0]
 
 	i = 0 #el cero ya has cogido los primos
-	while i < len(prime_factors_mcd):
-		notin = False
+	while i < len(prime_factors_gcd):
+		not_in = False
 		for j in array_of_prime_factors:
-			if prime_factors_mcd[i] not in j:
-				notin = True
+			if prime_factors_gcd[i] not in array_of_prime_factors[j]:
+				not_in = True
 				break
-		if(notin): prime_factors_mcd.pop(i)
+		if(not_in): prime_factors_gcd.pop(i)
 		else: i += 1
 	
-	mcd = 1
-	for i in prime_factors_mcd:
-		mcd *= i
-	return mcd
+	gcd = 1
+	for i in prime_factors_gcd:
+		gcd *= i
+	return gcd
+
+def array_without_repetition(array):
+	new_array = []
+	for i in array:
+		if i not in new_array: new_array.append(i)
+	return new_array
+
+def greatest_common_divisor(numbers):
+	array_prime_factors = []
+	gcd = 1
+	for i in numbers:
+		array_prime_factors.append(prime_factors(i))
+	#si en array_prime_factors[0] tenia numeros repetidos, metia esos numeros varias veces en gcd, por eso cree array_without_repetition
+	for i in array_without_repetition(array_prime_factors[0]):
+		amount = how_many_times_element_in_array(i, array_prime_factors[0])
+		for j in range(0, len(array_prime_factors)): #a partir de 1 porque ya pasamos por el cero con el primer amount. Ahora que uso array_without_repetition empieza desde 0
+			new_amount = how_many_times_element_in_array(i, array_prime_factors[j])
+			if(new_amount < amount): amount = new_amount
+		for j in range(0, amount): gcd *= i
+	return gcd
